@@ -75,6 +75,16 @@ app.put('/products/:id', (req, res) => {
   })
 })
 
+app.delete('/products/:id', (req, res) => {
+  const sql = 'DELETE from products WHERE id = ($1)';
+  db.query(sql, [req.params.id], (err, data) => {
+    if (err) {
+      throw (err);
+    }
+    res.status(201).send('Product deleted');
+  })
+})
+
 
 
 // 404
