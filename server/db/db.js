@@ -1,4 +1,5 @@
-const Sequelize = require('sequelize');
+// const Sequelize = require('sequelize');
+const { Pool, Client } = require('pg');
 
 // const connection = new Sequelize('amazon_dev', 'root', 'student', {
 //   host: 'localhost',
@@ -6,28 +7,46 @@ const Sequelize = require('sequelize');
 //   logging: false,
 // });
 
-const connection = new Sequelize('amazon', 'root', 'student', {
+//Sequelize
+// const connection = new Sequelize('amazon', 'root', 'student', {
+//   host: 'localhost',
+//   dialect: 'postgres',
+//   logging: false,
+//   pool: {
+//     max: 10,
+//     min: 0,
+//     acquire: 30000,
+//     idle: 10000
+//   }
+// })
+
+const client = new Client({
+  user: 'root',
   host: 'localhost',
-  dialect: 'postgres',
-  logging: false,
-  pool: {
-    max: 10,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
+  database: 'amazon',
+  password: 'student',
+  port: 5432,
+});
+
+client.connect((err) => {
+  if (err) {
+      throw err;    
+  } else {
+      console.log('connected!');
   }
-})
+});
 
 
-connection
-  .authenticate()
-  .then(() => {
-    console.log('Connected to the database.');
-  })
-  .catch((err) => {
-    console.error('Unable to connect to the database:', err);
-  });
+
+// connection
+//   .authenticate()
+//   .then(() => {
+//     console.log('Connected to the database.');
+//   })
+//   .catch((err) => {
+//     console.error('Unable to connect to the database:', err);
+//   });
 
 module.exports = {
-  connection,
+  client,
 };
