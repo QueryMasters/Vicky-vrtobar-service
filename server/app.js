@@ -35,11 +35,12 @@ app.use(cors());
 
 app.get('/products/:name', (req, res) => {
   const productName = req.params.name;
-  const sql = 'SELECT * from products where name LIKE ?';
+  const sql = 'SELECT * from products where name LIKE ($1)';
   db.query(sql, [productName], (error, results) => {
     if (error) {
       res.send(error);
     } else {
+      console.log(results);
       res.send(results);
     }
   })
@@ -65,9 +66,9 @@ app.post('/products', (req, res) => {
   })
 })
 
-app.put('/products/:id', (req, res) => {
+app.put('/products/:name', (req, res) => {
   const sql = `UPDATE products set name = ($1) where name = ($2)`
-  db.query(sql, [req.body.name, req.params.id], (err, data) => {
+  db.query(sql, [req.body.name, req.params.name], (err, data) => {
     if (err) {
       throw (err);
     }
