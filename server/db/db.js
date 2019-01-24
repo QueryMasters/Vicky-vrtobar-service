@@ -1,5 +1,7 @@
 // const Sequelize = require('sequelize');
 const { Pool, Client } = require('pg');
+var Redis = require('ioredis');
+
 
 // const connection = new Sequelize('amazon_dev', 'root', 'student', {
 //   host: 'localhost',
@@ -36,6 +38,11 @@ client.connect((err) => {
   }
 });
 
+// var cache = new Redis(6379);
+
+// cache.on("error", (error) => {
+//   throw("Redis connection error", error);
+// });
 
 
 // connection
@@ -49,4 +56,5 @@ client.connect((err) => {
 
 module.exports = {
   client,
+  // cache
 };

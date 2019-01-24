@@ -53,15 +53,16 @@ Promise.all(categoryPromises)
     let productName;
 
     for (let i = 0; i < categories.length; i++) {
-      for (let j = 1; j <= 100000; j++) {
+      for (let j = 1; j <= 10000; j++) {
         productName = faker.commerce.productName();
+        productNameID = productName + " " + j;
         // productDescription = faker.lorem.paragraph();
         // productPromises.push(Product.create({
         //   name: productName.toLowerCase(),
         //   categoryId: categories[i].id,
         // }));
         products.push({
-          name: productName.toLowerCase(),
+          name: productNameID.toLowerCase(),
           categoryId: categories[i].id,
         })
       }
@@ -92,7 +93,7 @@ Promise.all(categoryPromises)
   const createProducts = async() => {
     try {
       await(Promise.all(categoryPromises))
-      for (var i = 1; i < 21; i++) {
+      for (var i = 1; i < 201; i++) {
         await Product.bulkCreate(productsGlobal);
         var numInserted = i * 500000
         console.log('now have inserted ', numInserted);

@@ -5,6 +5,8 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+// var { cache } = require('./db/db.js');
+
 
 const app = express();
 
@@ -34,8 +36,9 @@ app.use(cors());
 //delete a product
 
 app.get('/products/:name', (req, res) => {
+
   const productName = req.params.name;
-  const sql = 'SELECT * from products where name LIKE ($1)';
+  const sql = 'SELECT * from products where name LIKE ($1) LIMIT 5';
   db.query(sql, [productName], (error, results) => {
     if (error) {
       res.send(error);
@@ -45,6 +48,80 @@ app.get('/products/:name', (req, res) => {
     }
   })
 })
+
+// app.get('/products/:name', (req, res) => {
+//   var query = req.params.name.toLowerCase();
+
+//   cache.exists(query)
+//   .then(exists => {
+//     if (exists) {
+//       return cache.get(query);
+//     } else {
+//       console.log(exists);
+//       return Promise.resolve(false);
+//     }
+//   })
+//   .then(products => {
+//     if (products) {
+//       res.status(200).send({ products: JSON.parse(products) });
+//       return Promise.resolve(true);
+//     } else {
+//       return Promise.resolve(false)
+//     }
+//   })
+//   .then(responseWasSent => {
+//     if(!responseWasSent) {
+//       // return Product.find({name: new RegExp(`^${query}`)}).limit(5)
+//       const productName = req.params.name;
+//       const sql = 'SELECT * from products where name LIKE ($1) LIMIT 5';
+//       db.query(sql, [productName], (error, results) => {
+//         if (error) {
+//           res.send(error);
+//         } else {
+//           console.log(results);
+//           res.send(results);
+//           return results;
+//         }
+//       })
+//     } else {
+//       return Promise.resolve("Response was sent");
+//     }
+//   })
+//   .then(products => {
+//     if (products.length === 0) {
+//       // return Product.find({name: new RegExp(query)}).limit(5)
+//       const productName = req.params.name;
+//       const sql = 'SELECT * from products where name LIKE ($1) LIMIT 5';
+//       db.query(sql, [productName], (error, results) => {
+//         if (error) {
+//           res.send(error);
+//         } else {
+//           console.log(results);
+//           res.send(results);
+//           return results;
+//         }
+//       })
+//     } else if (products === "Response was sent") {
+//       return Promise.resolve(false);
+//     } else {
+//       cache.set(query, JSON.stringify(products));
+//       res.status(200).send({ products });
+//       return Promise.resolve(false);
+//     }
+//   })
+//   .then(products => {
+//     if(products) {
+//       cache.set(query, JSON.stringify(products));
+//       res.status(200).send({ products });
+//     }
+//   })
+//   .catch(err => {
+//     res.status(500).send({ err });
+//   });
+
+
+// })
+
 app.post('/products', (req, res) => {
   console.log(req.body);
   // var values = [];
@@ -86,6 +163,9 @@ app.delete('/products/:id', (req, res) => {
   })
 })
 
+app.get('/loaderio-b0089252821ad09cc0de0860ae64dc74.txt', (req, res) => {
+  res.send('loaderio-b0089252821ad09cc0de0860ae64dc74');
+})
 
 
 // 404
