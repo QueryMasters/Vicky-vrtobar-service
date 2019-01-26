@@ -6,7 +6,17 @@ const morgan = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 // var { cache } = require('./db/db.js');
+const redis = require('redis');
 
+
+const mario = redis.createClient(); //redis client
+// {
+  // host: '13.52.61.116'
+//}
+
+mario.on('error', (err) => {
+  console.log(`Error ${err}`);
+});
 
 const app = express();
 
@@ -37,16 +47,31 @@ app.use(cors());
 
 app.get('/products/:name', (req, res) => {
 
-  const productName = req.params.name;
-  const sql = 'SELECT * from products where name LIKE ($1) LIMIT 5';
-  db.query(sql, [productName], (error, results) => {
-    if (error) {
-      res.send(error);
-    } else {
-      console.log(results);
-      res.send(results);
+  console.log('redis');
+  return mario.get(`${req.params.name}`),
+  (err, result) => {
+    if (err) {
+      res.sendStatus(404);
     }
-  })
+    if (result) {
+      res.status(200).send(result);
+    } else {
+      const productName = req.params.name;
+      const sql = 'SELECT * from products where name LIKE ($1) LIMIT 5';
+      db.query(sql, [productName], (error, results) => {
+        const redisKey = `products${req.params.name}`;
+        if (error) {
+          res.send(error);
+        } else {
+          console.log(results);
+          mario.set(`${redisKey}`, `${JSON.stringify(data)}`, 'EX', 6000)
+          res.send(results);
+        }
+      })
+    }
+  }
+
+
 })
 
 // app.get('/products/:name', (req, res) => {
